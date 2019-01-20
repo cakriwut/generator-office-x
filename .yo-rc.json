@@ -1,0 +1,9 @@
+{
+  "generator-node": {
+    "promptValues": {
+      "authorName": "Riwut Libinuko",
+      "authorEmail": "cakriwut@gmail.com",
+      "authorUrl": "https://blog.libinuko.com"
+    }
+  }
+}
