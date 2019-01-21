@@ -9,9 +9,9 @@
     "url": "https://blog.libinuko.com"
   },
   "files": [
-    "generators"
+    "app"
   ],
-  "main": "generators/index.js",
+  "main": "app/index.js",
   "keywords": [
     "office",
     "yeoman-generator",
@@ -43,8 +43,10 @@
     "npm": ">= 4.0.0"
   },
   "dependencies": {
-    "yeoman-generator": "^2.0.1",
     "chalk": "^2.1.0",
+    "command-exists": "^1.2.8",
+    "generator-office": "^1.1.24",
+    "yeoman-generator": "^2.0.1",
     "yosay": "^2.0.1"
   },
   "jest": {
