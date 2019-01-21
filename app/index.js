@@ -42,7 +42,7 @@ module.exports = class extends Generator {
     switch(this.props.extProjectType) {
       case 'vuejs':
         this.composeWith('office-x:vuejs',{}, {
-          local: require.resolve('../vue')
+          local: require.resolve('../vuejs')
         });
         break;
       default:

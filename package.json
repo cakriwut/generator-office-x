@@ -9,7 +9,8 @@
     "url": "https://blog.libinuko.com"
   },
   "files": [
-    "app"
+    "app",
+    "vuejs"
   ],
   "main": "app/index.js",
   "keywords": [
