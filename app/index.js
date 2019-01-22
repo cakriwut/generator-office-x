@@ -52,11 +52,12 @@ module.exports = class extends Generator {
       {
         type: 'list',
         name: 'extProjectType',
-        message: `Choose a ${chalk.bold.green('Extended')} project type or (none) :`,
+        message: `Choose a ${chalk.bold.green('Extended')} project type or (original) :`,
         choices:[
-          { name: 'Default (none)', value: 'standard'},
+          { name: 'Office generator (original)', value: 'standard'},
           { name: 'Office Add-in project using Vue framework', value: 'vuejs'}
-        ]
+        ],
+        default: 'vuejs'
       }
     ];
 
@@ -67,13 +68,16 @@ module.exports = class extends Generator {
   }
 
   configuring() {
+    // We need following statement to removed undefined flowing to subgenerator.
+    let options = JSON.parse(JSON.stringify(this.options)) || {};
     switch(this.props.extProjectType) {
       case 'vuejs':
-        this.composeWith('office-x:vuejs',{}, {
+        this.composeWith('office-x:vuejs', options, { 
           local: require.resolve('../vuejs')
         });
         break;
       default:
+        this.composeWith('office:app', options);  
         break;
     }
   }
