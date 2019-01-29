@@ -13,37 +13,26 @@ module.exports = class extends Generator {
     constructor(args,opts){
         super(args,opts);
 
-        //this.context = opts.context || {};
     }
 
-    initializing() {
-        this.composeWith(
-            require.resolve(`generator-office/generators/app`), 
-            // {
-            //     'skip-install': true,
-            //     'projectType': 'jquery',
-            //     'js':true,
-            //     'ts': false,
-            //     'name': 'test-addin',
-            //     'host' : 'excel'
-            // }      
-            {
-                'details' : true
-            }  
-        )
+    initializing() { }
+
+    prompting() { }
+
+    configuring() { }
+
+    default() { }
+
+    writing() {
+        //Write, before original Office:App here.
     }
-
-    prompting() {}
-
-    configuring() {}
-
-    writing() {}
 
     install() {
-
+        //Overwrite installation, after original Office:App here.
     }
 
+   
     end() {
-
+        
     }
 }

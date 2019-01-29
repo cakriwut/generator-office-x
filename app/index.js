@@ -5,6 +5,11 @@ const yosay = require('yosay');
 const commandExists = require('command-exists');
 const fs = require('fs');
 
+const typescript = `Typescript`;
+const javascript = `Javascript`;
+const originalProjectTypes = ['angular','excel-function','jquery','manifest','react'];
+const extProjectTypes = ['vue'];
+
 module.exports = class extends Generator {
 
   constructor(args, opts){
@@ -48,45 +53,73 @@ module.exports = class extends Generator {
 
   prompting() {
 
+    // if projectType not specified, or project type not valid list 
+    let checkOptions = (this.options.projectType == null || 
+          !originalProjectTypes.concat(extProjectTypes).includes(this.options.projectType));
     const prompts = [
       {
         type: 'list',
         name: 'extProjectType',
-        message: `Choose a ${chalk.bold.green('Extended')} project type or (original) :`,
+        message: `Choose a ${chalk.bold.green('Extended')} project type or (original):`,
         choices:[
           { name: 'Office generator (original)', value: 'standard'},
-          { name: 'Office Add-in project using Vue framework', value: 'vuejs'}
+          { name: 'Office Add-in project using Vue framework', value: 'vue'}
         ],
-        default: 'vuejs'
+        default: 'vue',
+        when: checkOptions
       }
     ];
 
     return this.prompt(prompts).then(props => {
-      // To access props later use this.props.someAnswer;
-      this.props = props;
+        this.props = props;
+        // props.extProjectType from prompt. If extProjectType, then just default to jQuery.
+        // Otherwise, just feed to subgenerator office:app
+        if(this.props.extProjectType != null) {
+          this.options.extProjectType = props.extProjectType;
+          if(extProjectTypes.includes(this.props.extProjectType)){
+            this.options.projectType = 'jquery';      
+            this.options['skip-install'] = true;      
+          } else {
+            this.options.projectType = null; //Let user choose using office:app prompt
+          }
+        }
+
+        this.options.js = this.props.scriptType == javascript,
+        this.options.ts = this.props.scriptType == typescript
+
+        let options = JSON.parse(JSON.stringify(this.options)) || {};
+        this.composeWith('office:app',options);
+
     });
+
   }
+
 
   configuring() {
-    // We need following statement to removed undefined flowing to subgenerator.
-    let options = JSON.parse(JSON.stringify(this.options)) || {};
-    switch(this.props.extProjectType) {
-      case 'vuejs':
-        this.composeWith('office-x:vuejs', options, { 
-          local: require.resolve('../vuejs')
-        });
-        break;
-      default:
-        this.composeWith('office:app', options);  
-        break;
-    }
   }
 
-  default() {
+  default() {    
   }
   writing() {}
 
   install() {}
+
+  customize(){
+      let options = JSON.parse(JSON.stringify(this.options)) || {};
+
+      switch (this.options.extProjectType) {
+        case 'vue':
+          this.composeWith('office-x:vuejs',options,{
+            local: require.resolve('../vuejs')
+          });
+          break;
+      
+        default:
+          this.log('Ready to install');
+          break;
+      }
+      
+  }
 
   end() {}
 
