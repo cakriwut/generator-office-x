@@ -84,8 +84,8 @@ module.exports = class extends Generator {
           }
         }
 
-        this.options.js = this.props.scriptType == javascript,
-        this.options.ts = this.props.scriptType == typescript
+        //this.options.js = this.props.scriptType == javascript,
+        //this.options.ts = this.props.scriptType == typescript
 
         let options = JSON.parse(JSON.stringify(this.options)) || {};
         this.composeWith('office:app',options);
