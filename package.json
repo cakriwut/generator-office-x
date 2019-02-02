@@ -56,7 +56,10 @@
     "yosay": "^2.0.1"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "templates"
+    ]
   },
   "lint-staged": {
     "*.js": [
@@ -70,7 +73,7 @@
   },
   "eslintConfig": {
     "extends": [
-      "xo",
+      "xo-space/esnext",
       "prettier"
     ],
     "env": {
@@ -78,14 +81,20 @@
       "node": true
     },
     "rules": {
-      "prettier/prettier": "error"
+      "prettier/prettier": [
+        "error",
+        {
+          "singleQuote": true,
+          "printWidth": 90
+        }
+      ]
     },
     "plugins": [
       "prettier"
     ]
   },
   "scripts": {
-    "pretest": "eslint .",
+    "pretest": "eslint . --fix",
     "test": "jest"
   },
   "repository": "cakriwut/generator-office-x",
