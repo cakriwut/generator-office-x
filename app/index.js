@@ -2,11 +2,7 @@
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const yosay = require('yosay');
-const commandExists = require('command-exists');
-const fs = require('fs');
 
-const typescript = `Typescript`;
-const javascript = `Javascript`;
 const originalProjectTypes = ['angular','excel-function','jquery','manifest','react'];
 const extProjectTypes = ['vue'];
 
@@ -83,9 +79,6 @@ module.exports = class extends Generator {
             this.options.projectType = null; //Let user choose using office:app prompt
           }
         }
-
-        //this.options.js = this.props.scriptType == javascript,
-        //this.options.ts = this.props.scriptType == typescript
 
         let options = JSON.parse(JSON.stringify(this.options)) || {};
         this.composeWith('office:app',options);
