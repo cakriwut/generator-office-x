@@ -1,5 +1,11 @@
-# generator-office-x [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
-> Extended Office AddIns Yeoman Generator
+# eXtended Office Add-in Project Generator - yo office-x!    
+[![NPM version][npm-image]][npm-url] 
+[![Build Status][travis-image]][travis-url] 
+[![Dependency Status][daviddm-image]][daviddm-url]  
+> Office-X , eXtended Office AddIns Yeoman Generator
+
+Office-X (X stands for eXtended) [Yeoman](http://yeoman.io) generator for creating **eXtended flavour** [Microsoft Office Add-in](https://docs.microsoft.com/en-us/OfficeDev/generator-office) projects using any text editor.
+
 
 ## Installation
 
