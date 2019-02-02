@@ -1,10 +1,18 @@
 'use strict';
+const appInsights = require('applicationinsights');
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const yosay = require('yosay');
 
 const originalProjectTypes = ['angular','excel-function','jquery','manifest','react'];
 const extProjectTypes = ['vue'];
+appInsights.setup('fee06a0c-4806-42fc-9ed8-96a2ccf3144d').start();
+let insight = appInsights.defaultClient;
+delete insight.context.tags['ai.cloud.roleInstance'];
+delete insight.context.tags['ai.device.osVersion'];
+delete insight.context.tags['ai.device.osArchitecture'];
+delete insight.context.tags['ai.device.osPlatform'];
+insight.context.tags['ai.cloud.role'] = 'office-x:main';
 
 module.exports = class extends Generator {
 
@@ -45,6 +53,7 @@ module.exports = class extends Generator {
       `Welcome to the \n${chalk.bold.green('Extended - Office Add-in')} generator, by ${chalk.bold.green('@cakriwut')}!` +
       `\nBased on \n${chalk.bold.green('Office Add-in generator')}`)
     );
+
   }
 
   prompting() {
@@ -66,23 +75,29 @@ module.exports = class extends Generator {
       }
     ];
 
-    return this.prompt(prompts).then(props => {
+    return this.prompt(prompts)
+    .then(props => {
         this.props = props;
+        let composedOptions = {};
+        composedOptions['skip-install'] = true;
         // props.extProjectType from prompt. If extProjectType, then just default to jQuery.
         // Otherwise, just feed to subgenerator office:app
         if(this.props.extProjectType != null) {
           this.options.extProjectType = props.extProjectType;
           if(extProjectTypes.includes(this.props.extProjectType)){
-            this.options.projectType = 'jquery';      
-            this.options['skip-install'] = true;      
+            this.options.projectType = 'jquery';       
           } else {
             this.options.projectType = null; //Let user choose using office:app prompt
           }
         }
+        /* Create insights */
+        insight.trackEvent('OfficeX',this.options);
 
-        let options = JSON.parse(JSON.stringify(this.options)) || {};
+        let options = JSON.parse(JSON.stringify(Object.assign({},this.options,composedOptions))) || {};
         this.composeWith('office:app',options);
-
+    })
+    .catch((err) => {
+      insight.trackException(new Error('Prompting Error: ' + err));
     });
 
   }
@@ -95,11 +110,30 @@ module.exports = class extends Generator {
   }
   writing() {}
 
-  install() {}
+  install() {
+    try {
+      if(this.options['skip-install']){
+        this.installDependencies({
+          npm:false,
+          bower: false,
+          callback: null
+        })
+      } else {
+        this.installDependencies({
+          npm: true,
+          bower: false,
+          callback: null
+        })
+      }
+
+    } catch(err){
+      insight.trackException(new Error('Install Error: ' + err));
+    }
+  }
 
   customize(){
       let options = JSON.parse(JSON.stringify(this.options)) || {};
-
+      insight.trackEvent('Extended_ProjectType',{ ExtendedProjectType: this.options.extProjectType});
       switch (this.options.extProjectType) {
         case 'vue':
           this.composeWith('office-x:vuejs',options,{
