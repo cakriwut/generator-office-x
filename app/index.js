@@ -59,7 +59,7 @@ module.exports = class extends Generator {
   prompting() {
 
     // if projectType not specified, or project type not valid list 
-    let checkOptions = (this.options.projectType == null || 
+    let checkOptions = (this.options.projectType === null || 
           !originalProjectTypes.concat(extProjectTypes).includes(this.options.projectType));
     const prompts = [
       {
@@ -82,7 +82,7 @@ module.exports = class extends Generator {
         composedOptions['skip-install'] = true;
         // props.extProjectType from prompt. If extProjectType, then just default to jQuery.
         // Otherwise, just feed to subgenerator office:app
-        if(this.props.extProjectType != null) {
+        if(this.props.extProjectType !== null) {
           this.options.extProjectType = props.extProjectType;
           if(extProjectTypes.includes(this.props.extProjectType)){
             this.options.projectType = 'jquery';       

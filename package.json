@@ -29,7 +29,6 @@
     "extended"
   ],
   "devDependencies": {
-    "applicationinsights": "^1.1.0",
     "eslint": "^5.9.0",
     "eslint-config-prettier": "^3.3.0",
     "eslint-config-xo": "^0.25.0",
@@ -47,6 +46,7 @@
     "npm": ">= 4.0.0"
   },
   "dependencies": {
+    "applicationinsights": "^1.1.0",
     "camaro": "^3.0.14",
     "chalk": "^2.1.0",
     "command-exists": "^1.2.8",

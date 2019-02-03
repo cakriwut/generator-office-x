@@ -6,14 +6,10 @@ const _ = require('lodash');
 const parser = require('camaro');
 
 /* Read from generator-office */
+/* eslint-disable camelcase */
 const starterCode_1 = require('generator-office/generators/app/config/starterCode');
 
 module.exports = class extends Generator {
-
-    constructor(args,opts){
-        super(args,opts);
-
-    }
 
     initializing() { }
 
@@ -59,7 +55,7 @@ module.exports = class extends Generator {
 
                 this.project = parser(manifestXml,template);
                 
-                if(packageJson.devDependencies.typescript != null){
+                if(packageJson.devDependencies.typescript !== null){
                     this.project.scriptType = 'Typescript';
                     this.project.language = 'ts';
                 } else {
@@ -69,7 +65,7 @@ module.exports = class extends Generator {
                 
                 this.project.folder = this.project.name;
                 /* Set folder if to output param  if specified */
-                if (this.options.output != null) {
+                if (this.options.output !== null) {
                     this.project.folder = this.options.output;
                 }
 
