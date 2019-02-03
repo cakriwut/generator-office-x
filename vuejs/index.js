@@ -54,14 +54,9 @@ module.exports = class extends Generator {
                 }
 
                 this.project = parser(manifestXml,template);
-                
-                if(packageJson.devDependencies.typescript !== null){
-                    this.project.scriptType = 'Typescript';
-                    this.project.language = 'ts';
-                } else {
-                    this.project.scriptType = 'Javascript';
-                    this.project.language = 'js';
-                }
+
+                this.project.scriptType = packageJson.devDependencies.typescript !== null ? 'Typescript' : 'Javascript';
+                this.project.language = packageJson.devDependencies.typescript !== null ? 'ts' : 'js';
                 
                 this.project.folder = this.project.name;
                 /* Set folder if to output param  if specified */
