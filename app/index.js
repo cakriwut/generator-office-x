@@ -8,12 +8,11 @@ const typescript = `Typescript`;
 const javascript = `Javascript`;
 const originalProjectTypes = ['angular', 'excel-function', 'jquery', 'manifest', 'react'];
 const extProjectTypes = ['vue'];
-appInsights.setup('fee06a0c-4806-42fc-9ed8-96a2ccf3144d').start();
+appInsights.setup('fee06a0c-4806-42fc-9ed8-96a2ccf3144d')
+  .setUseDiskRetryCaching(true)
+  .start();
 const insight = appInsights.defaultClient;
 delete insight.context.tags['ai.cloud.roleInstance'];
-delete insight.context.tags['ai.device.osVersion'];
-delete insight.context.tags['ai.device.osArchitecture'];
-delete insight.context.tags['ai.device.osPlatform'];
 insight.context.tags['ai.cloud.role'] = 'office-x:main';
 
 module.exports = class extends Generator {
@@ -57,6 +56,7 @@ module.exports = class extends Generator {
         `Based on \n${chalk.bold.green('Office Add-in generator')}`
       )
     );
+    insight.trackEvent({ name:'Initializing', properties: { options: this.options , applicationName: 'office-x'}}); 
   }
 
   prompting() {
@@ -110,7 +110,11 @@ module.exports = class extends Generator {
         }
 
         /* Create insights */;
-        insight.trackEvent('OfficeX', this.options);
+        insight.trackEvent({ name:'Prompting', properties: { 
+              extProjectType: this.props.extProjectType, 
+              scriptJS: this.options.js, 
+              scriptTS: this.options.ts,
+              applicationName: 'office-x'}});  
 
         const options = JSON.parse(JSON.stringify(Object.assign({}, this.options, composedOptions))) || {};
         this.composeWith('office:app', options);
@@ -119,7 +123,7 @@ module.exports = class extends Generator {
       .catch(err => 
       {
         this.log(err);
-        //insight.trackException(new Error('Prompting Error: ' + err));
+        insight.trackException({ exception: new Error('Prompting error: ' + err) });
       });
   }
 
@@ -140,7 +144,8 @@ module.exports = class extends Generator {
         });        
       }
     } catch (err) {
-       insight.trackException(new Error('Install Error: ' + err));
+        this.log(err);
+        insight.trackException({ exception: new Error('Install Error: ' + err)});
     }
   }
 
@@ -165,16 +170,16 @@ module.exports = class extends Generator {
   end() {}
 
   _postInstallMessage() {
-            /* Next steps and npm commands */
-            this.log('----------------------------------------------------------------------------------------------------------\n');
-            this.log(`      ${chalk.green('Congratulations!')} Your add-in has been created! Your next steps:\n`);
-            this.log(`      1. Launch your local web server via ${chalk.inverse(' npm start ')} (you may also need to`);
-            this.log(`         trust the Self-Signed Certificate for the site if you haven't done that)`);
-            this.log(`      2. Sideload the add-in into your Office application.\n`);
-            this.log(`      Please refer to resource.html in your project for more information.`);
-            this.log(`      Or visit Office Add-ins repo at: https://github.com/officeDev/generator-office \n`);
-            this.log('----------------------------------------------------------------------------------------------------------\n');
-            this._exitProcess();
+    /* Next steps and npm commands */
+    this.log('----------------------------------------------------------------------------------------------------------\n');
+    this.log(`      ${chalk.green('Congratulations!')} Your add-in has been created! Your next steps:\n`);
+    this.log(`      1. Launch your local web server via ${chalk.inverse(' npm start ')} (you may also need to`);
+    this.log(`         trust the Self-Signed Certificate for the site if you haven't done that)`);
+    this.log(`      2. Sideload the add-in into your Office application.\n`);
+    this.log(`      Please refer to resource.html in your project for more information.`);
+    this.log(`      Or visit Office Add-ins repo at: https://github.com/officeDev/generator-office \n`);
+    this.log('----------------------------------------------------------------------------------------------------------\n');
+    this._exitProcess();
   }
   _detailedHelp() {
     this.log(`\nYo ${chalk.underline.bold.greenBright('Office-X')} ${chalk.bgGreen('Arguments' )} and ${chalk.bgMagenta('Options.')}\n`);
