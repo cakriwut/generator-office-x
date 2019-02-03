@@ -37,6 +37,7 @@ module.exports = class extends Generator {
    
     end() {}
 
+    /* eslint-disable no-negated-condition */
     _readProjectConfiguration() {
         return new Promise((resolve,reject) => {
             try {
@@ -59,8 +60,7 @@ module.exports = class extends Generator {
                 this.project.language = packageJson.devDependencies.typescript !== null ? 'ts' : 'js';
                 
                 this.project.folder = this.project.name;
-                /* Set folder if to output param  if specified */
-                /* eslint-disable no-negated-condition */
+                /* Set folder if to output param  if specified */                
                 if (this.options.output !== null) {
                     this.project.folder = this.options.output;
                 }
