@@ -60,6 +60,7 @@ module.exports = class extends Generator {
                 
                 this.project.folder = this.project.name;
                 /* Set folder if to output param  if specified */
+                /* eslint-disable no-negated-condition */
                 if (this.options.output !== null) {
                     this.project.folder = this.options.output;
                 }
