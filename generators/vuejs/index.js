@@ -79,12 +79,12 @@ module.exports = class extends Generator {
         }
 
         /* Overwrite office */
-        this.fs.copyTpl(this.templatePath(`**`), '', templateFills, {
+        this.fs.copyTpl(this.templatePath(`${this.project.language}/**`), '', templateFills, {
           globOptions: { ignore: `**/*.placeholder` }
         });
 
         /* Copy all dot files */
-        this.fs.copy(this.templatePath(`**/.*`),'');
+        this.fs.copy(this.templatePath(`${this.project.language}/**/.*`),'');
 
         return resolve();
       } catch (err) {
