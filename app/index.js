@@ -100,16 +100,13 @@ module.exports = class extends Generator {
 
         // Props.extProjectType from prompt. If extProjectType, then just default to jQuery.
         // Otherwise, just feed to subgenerator office:app
-        if (this.props.extProjectType !== null) 
+        if (this.props.extProjectType !== null && extProjectTypes.includes(this.props.extProjectType)) 
         {
-          this.options.extProjectType = this.props.extProjectType;
-          if (extProjectTypes.includes(this.props.extProjectType)) 
-          {
-            this.options.projectType = 'jquery';
+          this.options.extProjectType = this.props.extProjectType;          
+          this.options.projectType = 'jquery';
             /* Temporary */
-            this.options.js = true;
-            this.options.ts = false;
-          } 
+          this.options.js = true;
+          this.options.ts = false;          
         }
 
         /* Create insights */;
