@@ -4,6 +4,8 @@ const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const yosay = require('yosay');
 
+const typescript = `Typescript`;
+const javascript = `Javascript`;
 const originalProjectTypes = ['angular', 'excel-function', 'jquery', 'manifest', 'react'];
 const extProjectTypes = ['vue'];
 appInsights.setup('fee06a0c-4806-42fc-9ed8-96a2ccf3144d').start();
@@ -51,19 +53,16 @@ module.exports = class extends Generator {
 
     this.log(
       yosay(
-        `Welcome to the \n${chalk.bold.green(
-          'Extended - Office Add-in'
-        )} generator, by ${chalk.bold.green('@cakriwut')}!` +
-          `\nBased on \n${chalk.bold.green('Office Add-in generator')}`
+        `Welcome to the \n${chalk.bold.green('Extended - Office Add-in')}generator, by ${chalk.bold.green('@cakriwut')}!\n` +
+        `Based on \n${chalk.bold.green('Office Add-in generator')}`
       )
     );
   }
 
   prompting() {
     // If projectType not specified, or project type not valid list
-    const checkOptions =
-      this.options.projectType === null ||
-      !originalProjectTypes.concat(extProjectTypes).includes(this.options.projectType);
+    const checkOptions = this.options.projectType === null ||
+                        !originalProjectTypes.concat(extProjectTypes).includes(this.options.projectType);
     const prompts = [
       {
         type: 'list',
@@ -75,35 +74,49 @@ module.exports = class extends Generator {
         ],
         default: 'vue',
         when: checkOptions
+      },       
+      {
+        name: 'scriptType',
+        type: 'list',
+        message: 'Choose a script type:',
+        choices: [javascript],
+        default: javascript,
+        when: answers => answers.extProjectType !== 'standard'
       }
     ];
 
     return this.prompt(prompts)
-      .then(props => {
-        this.props = props;
+      .then(answers => {
+        this.props = answers;
         const composedOptions = {};
         composedOptions['skip-install'] = true;
         // Props.extProjectType from prompt. If extProjectType, then just default to jQuery.
         // Otherwise, just feed to subgenerator office:app
-        if (this.props.extProjectType !== null) {
-          this.options.extProjectType = props.extProjectType;
-          if (extProjectTypes.includes(this.props.extProjectType)) {
+        if (this.props.extProjectType !== null) 
+        {
+          this.options.extProjectType = this.props.extProjectType;
+          if (extProjectTypes.includes(this.props.extProjectType)) 
+          {
             this.options.projectType = 'jquery';
           } else {
             this.options.projectType = null; // Let user choose using office:app prompt
           }
         }
+        
+        this.options.scriptType = this.props.scriptType;
+        this.options.js = this.props.scriptType === javascript ? true: undefined;
+        this.options.ts = this.props.scriptType === typescript ? true: undefined;
 
-        /* Create insights */
+        /* Create insights */;
         insight.trackEvent('OfficeX', this.options);
 
-        const options =
-          JSON.parse(JSON.stringify(Object.assign({}, this.options, composedOptions))) ||
-          {};
+        const options = JSON.parse(JSON.stringify(Object.assign({}, this.options, composedOptions))) || {};
         this.composeWith('office:app', options);
       })
-      .catch(err => {
-        insight.trackException(new Error('Prompting Error: ' + err));
+      .catch(err => 
+      {
+        this.log(err);
+        //insight.trackException(new Error('Prompting Error: ' + err));
       });
   }
 
@@ -147,7 +160,7 @@ module.exports = class extends Generator {
         break;
 
       default:
-        this.log('Ready to install');
+        // Default office generator
         break;
     }
   }
