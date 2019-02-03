@@ -116,20 +116,21 @@ module.exports = class extends Generator {
   install() {
     try {
       if (this.options['skip-install']) {
-        this.installDependencies({
-          npm: false,
-          bower: false,
-          callback: null
-        });
-      } else {
+        // this.installDependencies({
+        //   npm: false,
+        //   bower: false,
+        //   callback: this._postInstallMessage.bind(this)
+        // });
+        this._postInstallMessage();
+      } else {        
         this.installDependencies({
           npm: true,
           bower: false,
-          callback: null
-        });
+          callback: this._postInstallMessage.bind(this)
+        });        
       }
     } catch (err) {
-      insight.trackException(new Error('Install Error: ' + err));
+       insight.trackException(new Error('Install Error: ' + err));
     }
   }
 
@@ -141,7 +142,7 @@ module.exports = class extends Generator {
     switch (this.options.extProjectType) {
       case 'vue':
         this.composeWith('office-x:vuejs', options, {
-          local: require.resolve('../vuejs')
+          local: require.resolve('../generators/vuejs')
         });
         break;
 
@@ -153,97 +154,42 @@ module.exports = class extends Generator {
 
   end() {}
 
+  _postInstallMessage() {
+            /* Next steps and npm commands */
+            this.log('----------------------------------------------------------------------------------------------------------\n');
+            this.log(`      ${chalk.green('Congratulations!')} Your add-in has been created! Your next steps:\n`);
+            this.log(`      1. Launch your local web server via ${chalk.inverse(' npm start ')} (you may also need to`);
+            this.log(`         trust the Self-Signed Certificate for the site if you haven't done that)`);
+            this.log(`      2. Sideload the add-in into your Office application.\n`);
+            this.log(`      Please refer to resource.html in your project for more information.`);
+            this.log(`      Or visit Office Add-ins repo at: https://github.com/officeDev/generator-office \n`);
+            this.log('----------------------------------------------------------------------------------------------------------\n');
+            this._exitProcess();
+  }
   _detailedHelp() {
-    this.log(
-      `\nYo ${chalk.underline.bold.greenBright('Office-X')} ${chalk.bgGreen(
-        'Arguments'
-      )} and ${chalk.bgMagenta('Options.')}\n`
-    );
-    this.log(
-      `NOTE: ${chalk.bgGreen(
-        'Arguments'
-      )} must be specified in the order below, and ${chalk.bgMagenta(
-        'Options'
-      )} must follow ${chalk.bgGreen('Arguments')}.\n`
-    );
-    this.log(
-      `  ${chalk.bgGreen(
-        'projectType'
-      )}:Specifies the type of project to create. Valid project types include:`
-    );
-    this.log(
-      `    ${chalk.yellow('angular:')}  Creates an Office add-in using Angular framework.`
-    );
-    this.log(
-      `    ${chalk.yellow(
-        'excel-functions:'
-      )} Creates an Office add-in for Excel custom functions.  Must specify 'Excel' as host parameter.`
-    );
-    this.log(
-      `    ${chalk.yellow('jquery:')} Creates an Office add-in using Jquery framework.`
-    );
-    this.log(
-      `    ${chalk.yellow(
-        'manifest:'
-      )} Creates an only the manifest file for an Office add-in.`
-    );
-    this.log(
-      `    ${chalk.yellow('react:')} Creates an Office add-in using React framework.`
-    );
-    this.log(
-      `    ${chalk.yellow(
-        'vue:'
-      )} Creates an Office add-in using Vuejs framework. [${chalk.underline.bold.greenBright(
-        'Office-X'
-      )}] \n`
-    );
-    this.log(
-      `  ${chalk.bgGreen(
-        'name'
-      )}:Specifies the name for the project that will be created.\n`
-    );
+    this.log(`\nYo ${chalk.underline.bold.greenBright('Office-X')} ${chalk.bgGreen('Arguments' )} and ${chalk.bgMagenta('Options.')}\n`);
+    this.log(`NOTE: ${chalk.bgGreen('Arguments')} must be specified in the order below, and ${chalk.bgMagenta('Options')} must follow ${chalk.bgGreen('Arguments')}.\n`);
+    this.log(`  ${chalk.bgGreen('projectType')}:Specifies the type of project to create. Valid project types include:`);
+    this.log(`    ${chalk.yellow('angular:')}  Creates an Office add-in using Angular framework.`);
+    this.log(`    ${chalk.yellow('excel-functions:')} Creates an Office add-in for Excel custom functions.  Must specify 'Excel' as host parameter.`);
+    this.log(`    ${chalk.yellow('jquery:')} Creates an Office add-in using Jquery framework.`);
+    this.log(`    ${chalk.yellow('manifest:')} Creates an only the manifest file for an Office add-in.`);
+    this.log(`    ${chalk.yellow('react:')} Creates an Office add-in using React framework.`);
+    this.log(`    ${chalk.yellow('vue:')} Creates an Office add-in using Vuejs framework. [${chalk.underline.bold.greenBright('Office-X')}] \n`);
+    this.log(`  ${chalk.bgGreen('name')}:Specifies the name for the project that will be created.\n`);
     this.log(`  ${chalk.bgGreen('host')}:Specifies the host app in the add-in manifest.`);
-    this.log(
-      `    ${chalk.yellow(
-        'excel:'
-      )}  Creates an Office add-in for Excel. Valid hosts include:`
-    );
+    this.log(`    ${chalk.yellow('excel:')}  Creates an Office add-in for Excel. Valid hosts include:`);
     this.log(`    ${chalk.yellow('onenote:')} Creates an Office add-in for OneNote.`);
     this.log(`    ${chalk.yellow('outlook:')} Creates an Office add-in for Outlook.`);
-    this.log(
-      `    ${chalk.yellow('powerpoint:')} Creates an Office add-in for PowerPoint.`
-    );
+    this.log(`    ${chalk.yellow('powerpoint:')} Creates an Office add-in for PowerPoint.`);
     this.log(`    ${chalk.yellow('project:')} Creates an Office add-in for Project.`);
     this.log(`    ${chalk.yellow('word:')} Creates an Office add-in for Word.\n`);
-    this.log(
-      `  ${chalk.bgMagenta(
-        '--output'
-      )}:Specifies the location in the file system where the project will be created.`
-    );
-    this.log(
-      `    ${chalk.yellow(
-        'If the option is not specified, the project will be created in the current folder'
-      )}\n`
-    );
-    this.log(
-      `  ${chalk.bgMagenta(
-        '--js'
-      )}:Specifies that the project will use JavaScript instead of TypeScript.`
-    );
-    this.log(
-      `    ${chalk.yellow(
-        'If the option is not specified, Yo Office will prompt for TypeScript or JavaScript'
-      )}\n`
-    );
-    this.log(
-      `  ${chalk.bgMagenta(
-        '--ts'
-      )}:Specifies that the project will use TypeScript instead of JavaScript.`
-    );
-    this.log(
-      `    ${chalk.yellow(
-        'If the option is not specified, Yo Office will prompt for TypeScript or JavaScript'
-      )}\n`
+    this.log(`  ${chalk.bgMagenta('--output')}:Specifies the location in the file system where the project will be created.`);
+    this.log(`    ${chalk.yellow('If the option is not specified, the project will be created in the current folder')}\n`);
+    this.log(`  ${chalk.bgMagenta('--js')}:Specifies that the project will use JavaScript instead of TypeScript.`);
+    this.log(`    ${chalk.yellow('If the option is not specified, Yo Office will prompt for TypeScript or JavaScript')}\n`);
+    this.log(`  ${chalk.bgMagenta('--ts')}:Specifies that the project will use TypeScript instead of JavaScript.`);
+    this.log(`    ${chalk.yellow('If the option is not specified, Yo Office will prompt for TypeScript or JavaScript')}\n`
     );
     this._exitProcess();
   }
