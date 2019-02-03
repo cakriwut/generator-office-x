@@ -10,7 +10,7 @@
   },
   "files": [
     "app",
-    "vuejs"
+    "generators"
   ],
   "main": "app/index.js",
   "keywords": [
@@ -85,8 +85,7 @@
       "prettier/prettier": [
         "error",
         {
-          "singleQuote": true,
-          "printWidth": 90
+          "singleQuote": true
         }
       ]
     },

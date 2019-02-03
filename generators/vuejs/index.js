@@ -38,17 +38,9 @@ module.exports = class extends Generator {
   _readProjectConfiguration() {
     return new Promise((resolve, reject) => {
       try {
-        this.log(
-          '----------------------------------------------------------------------------------\n'
-        );
-        this.log(
-          `                      ${chalk.bold.green(
-            'Office-X'
-          )} custom configuration         \n`
-        );
-        this.log(
-          '----------------------------------------------------------------------------------\n\n'
-        );
+        this.log('----------------------------------------------------------------------------------\n');
+        this.log(`                      ${chalk.bold.green('Office-X')} custom configuration         \n`);
+        this.log('----------------------------------------------------------------------------------\n\n');
         /* Read generator-office files */
         const packageJson = this.fs.readJSON('package.json', {});
         const manifestXml = this.fs.read('manifest.xml', '<?xml version="1.0" ?>');
