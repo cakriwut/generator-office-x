@@ -81,7 +81,7 @@ module.exports = class extends Generator {
         message: 'Choose a script type:',
         choices: [javascript],
         default: javascript,
-        when: answers => answers.extProjectType !== 'standard'
+        when: answers => answers.extProjectType !== 'standard' && this.options.js === undefined && this.options.ts === undefined
       }
     ];
 
@@ -89,7 +89,15 @@ module.exports = class extends Generator {
       .then(answers => {
         this.props = answers;
         const composedOptions = {};
-        composedOptions['skip-install'] = true;
+        composedOptions['skip-install'] = true;     
+       
+        if(this.props.scriptType !== undefined) {
+          let resultForScriptType = (this.props.scriptType !== undefined) ? this.props.scriptType : ( this.options.js === undefined ? typescript : javascript);
+          this.options.js = (this.options.js === undefined ) ? resultForScriptType === javascript : this.options.js;
+          this.options.ts = (this.options.ts === undefined ) ? resultForScriptType === typescript : this.options.ts;
+          this.options.scriptType = resultForScriptType;
+        }
+
         // Props.extProjectType from prompt. If extProjectType, then just default to jQuery.
         // Otherwise, just feed to subgenerator office:app
         if (this.props.extProjectType !== null) 
@@ -98,20 +106,18 @@ module.exports = class extends Generator {
           if (extProjectTypes.includes(this.props.extProjectType)) 
           {
             this.options.projectType = 'jquery';
-          } else {
-            this.options.projectType = null; // Let user choose using office:app prompt
-          }
+            /* Temporary */
+            this.options.js = true;
+            this.options.ts = false;
+          } 
         }
-        
-        this.options.scriptType = this.props.scriptType;
-        this.options.js = this.props.scriptType === javascript ? true: undefined;
-        this.options.ts = this.props.scriptType === typescript ? true: undefined;
 
         /* Create insights */;
         insight.trackEvent('OfficeX', this.options);
 
         const options = JSON.parse(JSON.stringify(Object.assign({}, this.options, composedOptions))) || {};
         this.composeWith('office:app', options);
+        //this.composeWith(require.resolve('generator-office/generators/app'),options);
       })
       .catch(err => 
       {

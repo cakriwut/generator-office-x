@@ -31,7 +31,7 @@ module.exports = class extends Generator {
         this.log(`                      ${chalk.bold.green('Office-X')} custom configuration         \n`);
         this.log('----------------------------------------------------------------------------------\n\n');
         /* Read generator-office files */
-        const packageJson = this.fs.readJSON('package.json', {});
+        // const packageJson = this.fs.readJSON('package.json', {});
         const manifestXml = this.fs.read('manifest.xml', '<?xml version="1.0" ?>');
 
         const template = {
@@ -41,11 +41,10 @@ module.exports = class extends Generator {
         };
 
         this.project = parser(manifestXml, template);
+        let fileIsTypeScript = this.fs.exists('src/index.ts');
 
-        this.project.scriptType =
-          packageJson.devDependencies.typescript !== null ? 'Typescript' : 'Javascript';
-        this.project.language =
-          packageJson.devDependencies.typescript !== null ? 'ts' : 'js';
+        this.project.scriptType = fileIsTypeScript ? 'Typescript' : 'Javascript';
+        this.project.language =  fileIsTypeScript ? 'ts' : 'js';
 
         this.project.folder = this.project.name;
         /* Set folder if to output param  if specified */
@@ -74,6 +73,9 @@ module.exports = class extends Generator {
         /* Cleanup redundant file */
         if(this.project.language === 'js' && this.fs.exists('src/index.js')) {
           this.fs.delete('src/index.js');
+        } else if(this.fs.exists('src/index.ts'))
+        {
+          this.fs.delete('src/index.ts');
         }
 
         /* Overwrite office */
