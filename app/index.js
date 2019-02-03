@@ -92,7 +92,7 @@ module.exports = class extends Generator {
         composedOptions['skip-install'] = true;     
        
         if(this.props.scriptType !== undefined) {
-          let resultForScriptType = (this.props.scriptType !== undefined) ? this.props.scriptType : ( this.options.js === undefined ? typescript : javascript);
+          let resultForScriptType = (this.props.scriptType !== undefined) ? this.props.scriptType : ( this.options.js !== undefined ? javascript : typescript);
           this.options.js = (this.options.js === undefined ) ? resultForScriptType === javascript : this.options.js;
           this.options.ts = (this.options.ts === undefined ) ? resultForScriptType === typescript : this.options.ts;
           this.options.scriptType = resultForScriptType;
