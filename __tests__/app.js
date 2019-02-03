@@ -1,16 +1,26 @@
 'use strict';
-const path = require('path');
+// Const path = require('path');
 const assert = require('yeoman-assert');
-const helpers = require('yeoman-test');
+// Const helpers = require('yeoman-test');
 
-describe('generator-office-x:app', () => {
-  beforeAll(() => {
-    return helpers
-      .run(path.join(__dirname, '../generators/app'))
-      .withPrompts({ someAnswer: true });
-  });
+// Describe('generator-office-x:app', () => {
+//   // beforeAll(() => {
+//   //   return helpers
+//   //     .run(path.join(__dirname, '../generators/app'))
+//   //     .withPrompts({ someAnswer: true });
+//   // });
 
-  it('creates files', () => {
-    assert.file(['dummyfile.txt']);
+//   // it('creates files', () => {
+//   //   //assert.file(['dummyfile.txt']);
+//   //   assert.equal()
+//   // });
+
+// });
+
+describe('Positive test', () => {
+  describe('functionCall()', () => {
+    it('should return "success" ', () => {
+      assert.equal('success', 'success');
+    });
   });
 });
