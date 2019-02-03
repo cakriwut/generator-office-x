@@ -4,10 +4,18 @@ const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const _ = require('lodash');
 const parser = require('camaro');
+const appInsights = require('applicationinsights');
 
 /* Read from generator-office */
 /* eslint-disable camelcase */
 const starterCode_1 = require('generator-office/generators/app/config/starterCode');
+
+appInsights.setup('fee06a0c-4806-42fc-9ed8-96a2ccf3144d')
+  .setUseDiskRetryCaching(true)
+  .start();
+const insight = appInsights.defaultClient;
+delete insight.context.tags['ai.cloud.roleInstance'];
+insight.context.tags['ai.cloud.role'] = 'office-x:vue';
 
 module.exports = class extends Generator {
   
@@ -19,6 +27,7 @@ module.exports = class extends Generator {
       .then(done())
       .catch(err => {
         this.log(err);
+        insight.trackException({ exception: new Error('Writing error: ' + err) });
         process.exitCode = 1;
       });
   }
@@ -59,6 +68,7 @@ module.exports = class extends Generator {
         return resolve();
       } catch (err) {
         this.log(err);
+        insight.trackException({ exception: new Error('Read config error: ' + err) });
         return reject(err);
       }
     });
@@ -89,6 +99,7 @@ module.exports = class extends Generator {
         return resolve();
       } catch (err) {
         this.log(err);
+        insight.trackException({ exception: new Error('Copy files error: ' + err) });
         return reject(err);
       }
     });
