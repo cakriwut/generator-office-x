@@ -120,12 +120,6 @@ module.exports = class extends Generator {
       });
   }
 
-  configuring() {}
-
-  default() {}
-
-  writing() {}
-
   install() {
     try {
       if (this.options['skip-install']) {

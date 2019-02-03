@@ -10,14 +10,7 @@ const parser = require('camaro');
 const starterCode_1 = require('generator-office/generators/app/config/starterCode');
 
 module.exports = class extends Generator {
-  initializing() {}
-
-  prompting() {}
-
-  configuring() {}
-
-  default() {}
-
+  
   writing() {
     // Write, before original Office:App here.
     const done = this.async();
@@ -29,10 +22,6 @@ module.exports = class extends Generator {
         process.exitCode = 1;
       });
   }
-
-  install() {}
-
-  end() {}
 
   /* eslint-disable no-negated-condition */
   _readProjectConfiguration() {
@@ -81,10 +70,19 @@ module.exports = class extends Generator {
       try {
         const starterCode = starterCode_1.default(this.project.host);
         const templateFills = Object.assign({}, this.project, starterCode);
+
+        /* Cleanup redundant file */
+        if(this.project.language === 'js' && this.fs.exists('src/index.js')) {
+          this.fs.delete('src/index.js');
+        }
+
         /* Overwrite office */
         this.fs.copyTpl(this.templatePath(`**`), '', templateFills, {
           globOptions: { ignore: `**/*.placeholder` }
         });
+
+        /* Copy all dot files */
+        this.fs.copy(this.templatePath(`**/.*`),'');
 
         return resolve();
       } catch (err) {
