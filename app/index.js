@@ -93,8 +93,8 @@ module.exports = class extends Generator {
        
         if(this.props.scriptType !== undefined) {
           let resultForScriptType = (this.props.scriptType !== undefined) ? this.props.scriptType : ( this.options.js !== undefined ? javascript : typescript);
-          this.options.js = (this.options.js === undefined ) ? resultForScriptType === javascript : this.options.js;
-          this.options.ts = (this.options.ts === undefined ) ? resultForScriptType === typescript : this.options.ts;
+          this.options.js = (this.options.js !== undefined ) ? this.options.js : resultForScriptType === javascript;
+          this.options.ts = (this.options.ts !== undefined ) ? this.options.ts : resultForScriptType === typescript;
           this.options.scriptType = resultForScriptType;
         }
 
