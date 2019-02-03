@@ -79,7 +79,7 @@ module.exports = class extends Generator {
         name: 'scriptType',
         type: 'list',
         message: 'Choose a script type:',
-        choices: [javascript],
+        choices: [javascript,typescript],
         default: javascript,
         when: answers => answers.extProjectType !== 'standard' && this.options.js === undefined && this.options.ts === undefined
       }
