@@ -1,16 +1,24 @@
-language: ruby
-rvm:
-- 2.4.1
-sudo: required
+language: node_js
+node_js:
+  - "10"
+env:
+  - CXX=g++-4.8
 
-cache: bundler
-
-before_install:
-  - wget https://github.com/jgm/pandoc/releases/download/2.6/pandoc-2.6-1-amd64.deb
-  - sudo dpkg -i pandoc-2.6-1-amd64.deb
-  - rm pandoc-2.6-1-amd64.deb
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
 
 install:
-  - bundle install
+  - npm install -g vuepress
+script:
+  - npm run docs:build
+cache:
+  directories:
+    - "node_modules"
+notifications:
+  email: false
 
-script: bundle exec jekll build
+
