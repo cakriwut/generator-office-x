@@ -7,20 +7,18 @@ sections:
 - type: document
   path: docs/Readme.md
   label: Homepage
-  match: "**/*"
 - type: heading
   label: Data
 - type: document
   path: docs/config.json
   label: Site Config
-  match: "**/*"
 upload_dir: uploads
 public_path: "/uploads"
 front_matter_path: ''
 use_front_matter_path: false
 file_template: ":filename:"
 build:
-  preview_command: vuepress build -d .vuepress/dist
+  preview_command: npm run site:build
   publish_command: vuepress build -d .vuepress/dist
   preview_output_directory: ".vuepress/dist"
   output_directory: ".vuepress/dist"
