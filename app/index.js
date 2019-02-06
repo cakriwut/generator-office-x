@@ -3,6 +3,7 @@ const appInsights = require('applicationinsights');
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const yosay = require('yosay');
+const detectInstalled = require('detect-installed');
 
 const typescript = `Typescript`;
 const javascript = `Javascript`;
@@ -43,6 +44,8 @@ module.exports = class extends Generator {
       required: false,
       desc: 'Get more details on Yo Office arguments.'
     });
+
+    this._checkDependencies();
   }
 
   initializing() {
@@ -117,8 +120,11 @@ module.exports = class extends Generator {
               applicationName: 'office-x'}});  
 
         const options = JSON.parse(JSON.stringify(Object.assign({}, this.options, composedOptions))) || {};
-        this.composeWith('office:app', options);
-        //this.composeWith(require.resolve('generator-office/generators/app'),options);
+        if(this.options.isGlobalInstall) {
+          this.composeWith('office:app', options);
+        } else {
+           this.composeWith(require.resolve('generator-office/generators/app'),options);
+        }
       })
       .catch(err => 
       {
@@ -168,6 +174,12 @@ module.exports = class extends Generator {
   }
 
   end() {}
+
+  _checkDependencies() {
+    detectInstalled('generator-office').then((exists) => {
+       this.options.isGlobalInstall = exists;
+    });
+  }
 
   _postInstallMessage() {
     /* Next steps and npm commands */
