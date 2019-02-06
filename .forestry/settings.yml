@@ -9,9 +9,6 @@ sections:
   label: Homepage
 - type: heading
   label: Data
-- type: document
-  path: docs/config.json
-  label: Site Config
 upload_dir: uploads
 public_path: "/uploads"
 front_matter_path: ''
