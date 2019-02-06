@@ -5,7 +5,7 @@ admin_path: "/admin"
 webhook_url: 
 sections:
 - type: document
-  path: docs/Readme.md
+  path: docs/README.md
   label: Homepage
 - type: heading
   label: Data
