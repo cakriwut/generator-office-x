@@ -4,14 +4,16 @@ auto_deploy: false
 admin_path: "/admin"
 webhook_url: 
 sections:
-- type: directory
-  path: docs
-  label: Document
-  create: all
-  match: "**/*"
 - type: document
-  path: Readme.md
-  label: Introduction
+  path: docs/Readme.md
+  label: Homepage
+  match: "**/*"
+- type: heading
+  label: Data
+- type: document
+  path: docs/config.json
+  label: Site Config
+  match: "**/*"
 upload_dir: uploads
 public_path: "/uploads"
 front_matter_path: ''
